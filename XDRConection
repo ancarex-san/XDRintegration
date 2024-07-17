@@ -1,0 +1,32 @@
+import requests
+import json
+
+# Configuración de la API y autenticación
+fqdn = "yourfqdn"
+key_id = "your_key_id"
+key = "your_key"
+api_url = f"https://api-{fqdn}/public_api/v1/incidents/get_incidents"
+headers = {
+    "x-xdr-auth-id": key_id,
+    "Authorization": key,
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+}
+payload = {
+    "request_data": {}
+}
+
+# Hacer la solicitud a la API
+response = requests.post(api_url, headers=headers, data=json.dumps(payload))
+
+# Manejar la respuesta
+if response.status_code == 200:
+    logs = response.json()
+    print("Logs obtenidos de la API:", json.dumps(logs, indent=4))
+    
+    # Guardar los logs en un archivo
+    with open('logs.json', 'w') as file:
+        json.dump(logs, file, indent=4)
+    print("Logs guardados en logs.json")
+else:
+    print("Error al obtener los logs:", response.status_code, response.text)
